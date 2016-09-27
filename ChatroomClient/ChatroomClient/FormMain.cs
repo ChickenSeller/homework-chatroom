@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net;
 using System.Threading;
+using System.Collections;
 
 namespace ChatroomClient
 {
@@ -35,13 +36,31 @@ namespace ChatroomClient
 
         private void FormMain_FormClosed(object sender, FormClosedEventArgs e)
         {
-            //System.Environment.Exit(0);
+            System.Environment.Exit(0);
         }
 
         private void 进入ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormChatroom chatroom = new FormChatroom();
             chatroom.Show();
+        }
+
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+            GetChatroomList getChatroomList = new GetChatroomList(myself.UserID);
+            Program.client.SendMsg(getChatroomList, Program.client.serverip);
+        }
+
+        public void RefreshChatroomList()
+        {
+            int count = Program.client.chatrooms.chatrooms.Count;
+            ChatroomNode tempNode;
+            this.Chatroom_ListBox.Items.Clear();
+            for(int i = 0; i < count; i++)
+            {
+                tempNode = (ChatroomNode)Program.client.chatrooms.chatrooms[i];
+                this.Chatroom_ListBox.Items.Insert(i, tempNode.ChatroomName);
+            }
         }
     }
 }

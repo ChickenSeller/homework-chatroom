@@ -16,10 +16,10 @@ namespace ChatRoomServer
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Program.server = new Server(2333);
-            server.StartServer();
-            Application.Run();
+            frm = new Form1();
+            Application.Run(frm);
         }
         static public Server server;
+        static public Form1 frm; 
     }
 }

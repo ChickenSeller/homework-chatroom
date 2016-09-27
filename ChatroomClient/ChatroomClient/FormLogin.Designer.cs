@@ -61,6 +61,7 @@
             this.ServerPort_TextBox.Name = "ServerPort_TextBox";
             this.ServerPort_TextBox.Size = new System.Drawing.Size(126, 21);
             this.ServerPort_TextBox.TabIndex = 3;
+            this.ServerPort_TextBox.Text = "2333";
             // 
             // label2
             // 
@@ -77,6 +78,7 @@
             this.ServerIP_TextBox.Name = "ServerIP_TextBox";
             this.ServerIP_TextBox.Size = new System.Drawing.Size(126, 21);
             this.ServerIP_TextBox.TabIndex = 1;
+            this.ServerIP_TextBox.Text = "127.0.0.1";
             // 
             // label1
             // 

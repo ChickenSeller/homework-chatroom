@@ -67,6 +67,15 @@ namespace ChatroomClient
                 this.formLogin.Close();
             }
         }
+
+        public void HandleGetChatroomListResponse(GetChatroomListResponse package,EndPoint point)
+        {
+            if (package.data.status == 0)
+            {
+                this.chatrooms.chatrooms = package.data.chatrooms;
+                this.formMain.RefreshChatroomList();
+            }
+        }
         public void openFormMain()
         {
             Application.Run(this.formMain);
@@ -125,9 +134,13 @@ namespace ChatroomClient
                         break;
                     case (int)DataPackage.MESSAGE_CODE.GET_CHATROOM_LIST_RESPONSE:
                         GetChatroomListResponse package2 = JsonConvert.DeserializeObject<GetChatroomListResponse>(ReceivedMessage);
-                        //HandleGetChatroomList(package2, remotePoint);
+                        HandleGetChatroomListResponse(package2, remotePoint);
                         ReceivedMessage = "";
                         break;
+                    //case (int)DataPackage.MESSAGE_CODE.GET_CHATROOM_LIST_RESPONSE:
+                        //GetChatroomListResponse package3 = JsonConvert.DeserializeObject<GetChatroomListResponse>(ReceivedMessage);
+                        //ReceivedMessage = "";
+                        //break;
                 }
             }
             

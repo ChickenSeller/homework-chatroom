@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System.Collections;
 
 
+
 namespace ChatRoomServer
 {
     class Server
@@ -18,10 +19,11 @@ namespace ChatRoomServer
         public Socket socket;
         public User users;
         public Chatroom chatrooms;
-        bool RunningFlag;
+        public bool RunningFlag;
+        Thread WorkerThread;
         public Server(int port)
         {
-            this.serverip = new IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
+            this.serverip = new IPEndPoint(IPAddress.Any, port);
             this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             this.users = new User();
             this.chatrooms = new Chatroom();
@@ -34,10 +36,32 @@ namespace ChatRoomServer
             {
                 return -1;
             }
-            this.socket.Bind(serverip);
-            Thread thread = new Thread(new ThreadStart(this.ReceiveMsg));
-            thread.Start();
+            try
+            {
+                this.socket.Bind(serverip);
+            }
+            catch(Exception e)
+            {
+                return 1;
+            }
+            
+            this.WorkerThread = new Thread(new ThreadStart(this.ReceiveMsg));
+            this.WorkerThread.IsBackground = true;
+            this.WorkerThread.Start();
+            this.RunningFlag = true;
+            Log("服务启动成功！\t"+this.serverip.ToString());
+            return 0;
+        }
 
+        public int StopServer()
+        {
+            if (!this.RunningFlag)
+            {
+                return -1;
+            }
+            this.WorkerThread.Abort();
+            this.socket.Close();
+            Log("服务已停止");
             return 0;
         }
 
@@ -45,6 +69,7 @@ namespace ChatRoomServer
         {
             UserNode user = this.users.AddUser(((IPEndPoint)point).Address.ToString(), package.data.user_port, package.data.user_name);
             LoginResponse response = new LoginResponse((int)DataPackage.STATUS_CODE.OK, user.UserID, user.UserName);
+            Log("用户登录:\t" + user.UserPoint.ToString()+"\tID:"+user.UserID.ToString()+"\tName:"+user.UserName);
             this.SendMsg(response, user.UserPoint);
         }
 
@@ -52,6 +77,7 @@ namespace ChatRoomServer
         {
             GetChatroomListResponse response = new GetChatroomListResponse((int)DataPackage.STATUS_CODE.OK, this.chatrooms.chatrooms);
             UserNode user = this.users.GetUserByID(package.data.user_id);
+            Log("获取聊天室列表:\t" + user.UserPoint.ToString() + "\tID:" + user.UserID.ToString() + "\tName:" + user.UserName);
             this.SendMsg(response, user.UserPoint);
 
         }
@@ -87,7 +113,7 @@ namespace ChatRoomServer
 
         public void ReceiveMsg()
         {
-            while (true)
+            while (this.RunningFlag)
             {
                 string ReceivedMessage = "";
                 EndPoint remotePoint = new IPEndPoint(IPAddress.Any, 0);
@@ -135,6 +161,10 @@ namespace ChatRoomServer
         {
             string TextResponse = JsonConvert.SerializeObject(response);
             this.socket.SendTo(Encoding.UTF8.GetBytes(TextResponse), point);
+        }
+        public void Log(string msg)
+        {
+            Program.frm.Log(msg);
         }
 
     }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
 
+
 namespace ChatRoomServer
 {
     class Chatroom
@@ -18,6 +19,7 @@ namespace ChatRoomServer
         {
             ChatroomNode newChatroom = new ChatroomNode(ChatroomName);
             this.chatrooms.Add(newChatroom);
+            Log("添加聊天室成功!\t" + "\tID:" +newChatroom.ChatroomID + "\tName:" + newChatroom.ChatroomName);
             return newChatroom;
         }
         public ChatroomNode AddChatroom(string ChatroomName,ArrayList ChatroomMember)
@@ -38,7 +40,12 @@ namespace ChatRoomServer
             }
             return null;
         }
+        public void Log(string msg)
+        {
+            Program.frm.Log(msg);
+        }
     }
+
 
     class ChatroomNode
     {
@@ -76,5 +83,6 @@ namespace ChatRoomServer
                 this.ChatroomMembers.Remove(user);
             }
         }
+        
     }
 }
