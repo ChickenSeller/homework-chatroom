@@ -49,6 +49,11 @@ namespace ChatroomClient
             this.UserID = UserNode.UserNum;
             this.UserPoint = new IPEndPoint(IPAddress.Parse(UserIP), UserPort);
         }
+
+        public UserNode()
+        {
+
+        }
         public UserNode(int user_id,string user_name)
         {
             this.UserID = user_id;

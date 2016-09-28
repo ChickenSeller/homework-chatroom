@@ -57,6 +57,7 @@
             this.Chatroom_ListBox.Name = "Chatroom_ListBox";
             this.Chatroom_ListBox.Size = new System.Drawing.Size(220, 412);
             this.Chatroom_ListBox.TabIndex = 0;
+            this.Chatroom_ListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.Chatroom_ListBox_MouseDoubleClick);
             // 
             // JoinedChatroom_ListBox
             // 

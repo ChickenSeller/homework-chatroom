@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.ChatHistory_TextBox = new System.Windows.Forms.TextBox();
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.MenberListbox = new System.Windows.Forms.ListBox();
             this.Draft_TextBox = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
@@ -48,14 +48,14 @@
             this.ChatHistory_TextBox.Size = new System.Drawing.Size(429, 326);
             this.ChatHistory_TextBox.TabIndex = 2;
             // 
-            // listBox1
+            // MenberListbox
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 12;
-            this.listBox1.Location = new System.Drawing.Point(440, 3);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(133, 460);
-            this.listBox1.TabIndex = 1;
+            this.MenberListbox.FormattingEnabled = true;
+            this.MenberListbox.ItemHeight = 12;
+            this.MenberListbox.Location = new System.Drawing.Point(440, 3);
+            this.MenberListbox.Name = "MenberListbox";
+            this.MenberListbox.Size = new System.Drawing.Size(133, 460);
+            this.MenberListbox.TabIndex = 1;
             // 
             // Draft_TextBox
             // 
@@ -82,6 +82,7 @@
             this.button2.TabIndex = 4;
             this.button2.Text = "关闭";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 
@@ -101,13 +102,15 @@
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.Draft_TextBox);
-            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.MenberListbox);
             this.Controls.Add(this.ChatHistory_TextBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "FormChatroom";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FormChatroom";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormChatroom_FormClosed);
+            this.Load += new System.EventHandler(this.FormChatroom_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -116,7 +119,7 @@
         #endregion
 
         private System.Windows.Forms.TextBox ChatHistory_TextBox;
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ListBox MenberListbox;
         private System.Windows.Forms.TextBox Draft_TextBox;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;

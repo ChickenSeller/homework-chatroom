@@ -41,14 +41,16 @@ namespace ChatRoomServer
     {
         public string UserName;
         public int UserID;
-        public IPEndPoint UserPoint;
+        public string UserIP;
+        public int UserPort;
         public static int UserNum;
         public UserNode(string UserIP,int UserPort,string UserName)
         {
             this.UserName = UserName;
             UserNode.UserNum += 1;
             this.UserID = UserNode.UserNum;
-            this.UserPoint = new IPEndPoint(IPAddress.Parse(UserIP), UserPort);
+            this.UserIP = UserIP;
+            this.UserPort = UserPort;
         }
     }
 }

@@ -69,16 +69,16 @@ namespace ChatRoomServer
         {
             UserNode user = this.users.AddUser(((IPEndPoint)point).Address.ToString(), package.data.user_port, package.data.user_name);
             LoginResponse response = new LoginResponse((int)DataPackage.STATUS_CODE.OK, user.UserID, user.UserName);
-            Log("用户登录:\t" + user.UserPoint.ToString()+"\tID:"+user.UserID.ToString()+"\tName:"+user.UserName);
-            this.SendMsg(response, user.UserPoint);
+            Log("用户登录:\t" + user.UserIP+":"+user.UserPort.ToString()+"\tID:"+user.UserID.ToString()+"\tName:"+user.UserName);
+            this.SendMsg(response, point);
         }
 
         public void HandleGetChatroomList(GetChatroomList package, EndPoint point)
         {
             GetChatroomListResponse response = new GetChatroomListResponse((int)DataPackage.STATUS_CODE.OK, this.chatrooms.chatrooms);
             UserNode user = this.users.GetUserByID(package.data.user_id);
-            Log("获取聊天室列表:\t" + user.UserPoint.ToString() + "\tID:" + user.UserID.ToString() + "\tName:" + user.UserName);
-            this.SendMsg(response, user.UserPoint);
+            Log("获取聊天室列表:\t" + user.UserIP + ":" + user.UserPort.ToString() + "\tID:" + user.UserID.ToString() + "\tName:" + user.UserName);
+            this.SendMsg(response, point);
 
         }
 
@@ -91,7 +91,8 @@ namespace ChatRoomServer
             this.chatrooms.chatrooms.RemoveAt(index);
             this.chatrooms.chatrooms.Insert(index, chatroom);
             JoinChatroomResponse response = new JoinChatroomResponse((int)DataPackage.STATUS_CODE.OK, chatroom.ChatroomID, chatroom.ChatroomMembers);
-            this.SendMsg(response, user.UserPoint);
+            Log("加入聊天室:\tUser ID:"+ user.UserIP + ":" + user.UserPort.ToString() + "\tChatroom ID:" + chatroom.ChatroomID.ToString());
+            this.SendMsg(response, point);
         }
 
         public void HandleExitChatroom(ExitChatroom package, EndPoint point)
@@ -103,8 +104,9 @@ namespace ChatRoomServer
             this.chatrooms.chatrooms.RemoveAt(index);
             this.chatrooms.chatrooms.Insert(index, chatroom);
             ExitChatroomResponse response = new ExitChatroomResponse((int)DataPackage.STATUS_CODE.OK, chatroom.ChatroomID);
-            this.SendMsg(response, user.UserPoint);
+            this.SendMsg(response, point);
         }
+
 
         public void HandleChatMessage(ChatMessage package, EndPoint point)
         {
@@ -151,6 +153,12 @@ namespace ChatRoomServer
                         HandleGetChatroomList(package2, remotePoint);
                         ReceivedMessage = "";
                         break;
+                    case (int)DataPackage.MESSAGE_CODE.JOIN_CHATROOM:
+                        JoinChatroom package3 = JsonConvert.DeserializeObject<JoinChatroom>(ReceivedMessage);
+                        HandleJoinChatroom(package3, remotePoint);
+                        ReceivedMessage = "";
+                        break;
+
                 }
             }
             

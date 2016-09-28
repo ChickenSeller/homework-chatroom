@@ -17,7 +17,6 @@ namespace ChatroomClient
         {
             InitializeComponent();
             Control.CheckForIllegalCrossThreadCalls = false;
-            this.Text = Thread.CurrentThread.ManagedThreadId.ToString();
         }
 
         private void Connect_Button_Click(object sender, EventArgs e)

@@ -60,6 +60,11 @@ namespace ChatroomClient
             this.ChatroomName = ChatroomName;
             this.ChatroomMembers = new ArrayList();
         }
+
+        public ChatroomNode()
+        {
+           
+        }
         public void AddMember(UserNode user)
         {
             if (this.ChatroomMembers.Contains(user))
