@@ -25,6 +25,8 @@ namespace ChatRoomServer
         {
             this.serverip = new IPEndPoint(IPAddress.Any, port);
             this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            const int SIP_UDP_CONNRESET = -1744830452;
+            this.socket.IOControl(SIP_UDP_CONNRESET, new byte[] { 0, 0, 0, 0 }, null);
             this.users = new User();
             this.chatrooms = new Chatroom();
             this.RunningFlag = false;
@@ -65,54 +67,6 @@ namespace ChatRoomServer
             return 0;
         }
 
-        public void HandleLogin(Login package,EndPoint point)
-        {
-            UserNode user = this.users.AddUser(((IPEndPoint)point).Address.ToString(), package.data.user_port, package.data.user_name);
-            LoginResponse response = new LoginResponse((int)DataPackage.STATUS_CODE.OK, user.UserID, user.UserName);
-            Log("用户登录:\t" + user.UserIP+":"+user.UserPort.ToString()+"\tID:"+user.UserID.ToString()+"\tName:"+user.UserName);
-            this.SendMsg(response, point);
-        }
-
-        public void HandleGetChatroomList(GetChatroomList package, EndPoint point)
-        {
-            GetChatroomListResponse response = new GetChatroomListResponse((int)DataPackage.STATUS_CODE.OK, this.chatrooms.chatrooms);
-            UserNode user = this.users.GetUserByID(package.data.user_id);
-            Log("获取聊天室列表:\t" + user.UserIP + ":" + user.UserPort.ToString() + "\tID:" + user.UserID.ToString() + "\tName:" + user.UserName);
-            this.SendMsg(response, point);
-
-        }
-
-        public void HandleJoinChatroom(JoinChatroom package, EndPoint point)
-        {
-            ChatroomNode chatroom = this.chatrooms.GetChatRoomByID(package.data.chatroom_id);
-            int index = this.chatrooms.chatrooms.IndexOf(chatroom);
-            UserNode user = this.users.GetUserByID(package.data.user_id);
-            chatroom.AddMember(user);
-            this.chatrooms.chatrooms.RemoveAt(index);
-            this.chatrooms.chatrooms.Insert(index, chatroom);
-            JoinChatroomResponse response = new JoinChatroomResponse((int)DataPackage.STATUS_CODE.OK, chatroom.ChatroomID, chatroom.ChatroomMembers);
-            Log("加入聊天室:\tUser ID:"+ user.UserIP + ":" + user.UserPort.ToString() + "\tChatroom ID:" + chatroom.ChatroomID.ToString());
-            this.SendMsg(response, point);
-        }
-
-        public void HandleExitChatroom(ExitChatroom package, EndPoint point)
-        {
-            ChatroomNode chatroom = this.chatrooms.GetChatRoomByID(package.data.chatroom_id);
-            int index = this.chatrooms.chatrooms.IndexOf(chatroom);
-            UserNode user = this.users.GetUserByID(package.data.user_id);
-            chatroom.DelMember(user);
-            this.chatrooms.chatrooms.RemoveAt(index);
-            this.chatrooms.chatrooms.Insert(index, chatroom);
-            ExitChatroomResponse response = new ExitChatroomResponse((int)DataPackage.STATUS_CODE.OK, chatroom.ChatroomID);
-            this.SendMsg(response, point);
-        }
-
-
-        public void HandleChatMessage(ChatMessage package, EndPoint point)
-        {
-
-        }
-
         public void ReceiveMsg()
         {
             while (this.RunningFlag)
@@ -145,30 +99,40 @@ namespace ChatRoomServer
                 {
                     case (int)DataPackage.MESSAGE_CODE.LOGIN:
                         Login package1 = JsonConvert.DeserializeObject<Login>(ReceivedMessage);
-                        HandleLogin(package1, remotePoint);
+                        ServerHandler.HandleLogin(package1, remotePoint);
                         ReceivedMessage = "";
                         break;
                     case (int)DataPackage.MESSAGE_CODE.GET_CHATROOM_LIST:
                         GetChatroomList package2 = JsonConvert.DeserializeObject<GetChatroomList>(ReceivedMessage);
-                        HandleGetChatroomList(package2, remotePoint);
+                        ServerHandler.HandleGetChatroomList(package2, remotePoint);
                         ReceivedMessage = "";
                         break;
                     case (int)DataPackage.MESSAGE_CODE.JOIN_CHATROOM:
                         JoinChatroom package3 = JsonConvert.DeserializeObject<JoinChatroom>(ReceivedMessage);
-                        HandleJoinChatroom(package3, remotePoint);
+                        ServerHandler.HandleJoinChatroom(package3, remotePoint);
                         ReceivedMessage = "";
                         break;
 
                 }
+                remotePoint = null;
             }
-            
-
         }
 
         public void SendMsg(object response,EndPoint point)
         {
             string TextResponse = JsonConvert.SerializeObject(response);
             this.socket.SendTo(Encoding.UTF8.GetBytes(TextResponse), point);
+        }
+
+        public void BroadcastMsg(object response,ArrayList users)
+        {
+            EndPoint point = new IPEndPoint(IPAddress.Any, 0);
+            string TextResponse = JsonConvert.SerializeObject(response);
+            foreach (UserNode temp in users)
+            {
+                point =new IPEndPoint(IPAddress.Parse(temp.UserIP), temp.UserPort);
+                this.socket.SendTo(Encoding.UTF8.GetBytes(TextResponse), point);
+            }
         }
         public void Log(string msg)
         {

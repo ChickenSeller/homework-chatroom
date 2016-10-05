@@ -16,7 +16,12 @@ namespace ChatRoomServer
             GET_CHATROOM_LIST = 110,GET_CHATROOM_LIST_RESPONSE = 111,
             JOIN_CHATROOM = 120,JOIN_CHATROOM_RESPONSE = 121,
             EXIT_CHATROOM = 130,EXIT_CHATROOM_RESPONSE = 131,
-            CHAT_MESSAGE = 140,CHAT_MESSAGE_RESPONSE = 141
+            CHAT_MESSAGE = 140,PUSH_MESSAGE = 145,
+            LOGOUT = 150,LOGOUT_RESPONSE = 151,
+            UPDATE_USERS = 200,
+            UPDATE_CHATROOMS = 201,
+            SERVER_DOWN = 202
+            
         };
         public enum STATUS_CODE:int
         {
@@ -211,29 +216,33 @@ namespace ChatRoomServer
         }
     }
 
-    class ChatMessageResponse : DataPackage
+    class PushMessage : DataPackage
     {
         public class Data
         {
             public int status;
-            public int type;
-            public ArrayList success_id;
-            public ArrayList fail_id;
-            public Data(int status,int type,ArrayList success_id,ArrayList fail_id)
+            public int sender_id;
+            public int chatroom_id;
+            public string message_content;
+            public Data(int status,int sender_id, int chatroom_id, string message_content)
             {
-                this.fail_id = fail_id;
-                this.success_id = success_id;
                 this.status = status;
-                this.type = type;
+                this.sender_id = sender_id;
+                this.chatroom_id = chatroom_id;
+                this.message_content = message_content;
             }
         }
         public new Data data;
-        public ChatMessageResponse(int status, int type, ArrayList success_id, ArrayList fail_id)
+        public PushMessage(int status,int sender_id,int chatroom_id,string message_content)
         {
-            this.message_code = (int)DataPackage.MESSAGE_CODE.CHAT_MESSAGE_RESPONSE;
-            this.data = new Data(status, type, success_id, fail_id);
+            this.message_code = (int)DataPackage.MESSAGE_CODE.PUSH_MESSAGE;
+            this.data = new Data(status,sender_id,chatroom_id,message_content);
 
         }
+    }
+    class UpdateChatrooms : DataPackage
+    {
+
     }
 
 

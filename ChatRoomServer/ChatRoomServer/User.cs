@@ -34,6 +34,22 @@ namespace ChatRoomServer
             }
             return null;
         }
+        public void UpdateUserIP(int id,IPEndPoint connection)
+        {
+            UserNode tempNode = GetUserByID(id);
+            if(tempNode == null)
+            {
+                return;
+            }
+            int index = this.users.IndexOf(tempNode);
+            if(tempNode.UserPort==connection.Port && tempNode.UserIP == connection.Address.ToString())
+            {
+                return;
+            }
+            tempNode.UserIP = connection.Address.ToString();
+            tempNode.UserPort = connection.Port;
+            this.users[index] = tempNode;
+        }
 
     }
 

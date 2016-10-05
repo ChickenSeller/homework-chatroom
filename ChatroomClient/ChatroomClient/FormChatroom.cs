@@ -47,7 +47,8 @@ namespace ChatroomClient
                 }
             }
             this.Text = "聊天室:" + this.chatroomNode.ChatroomName + "    成员:" + this.chatroomNode.ChatroomMembers.Count.ToString();
-            foreach(UserNode tempNode in this.chatroomNode.ChatroomMembers)
+            this.MenberListbox.Items.Clear();
+            foreach (UserNode tempNode in this.chatroomNode.ChatroomMembers)
             {
                 this.MenberListbox.Items.Add(tempNode.UserName);
             }
