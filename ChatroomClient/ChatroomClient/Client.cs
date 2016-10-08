@@ -169,6 +169,23 @@ namespace ChatroomClient
                         ClientHandler.HandlePushMessage(package4, remotePoint);
                         ReceivedMessage = "";
                         break;
+                    case (int)DataPackage.MESSAGE_CODE.UPDATE_CHATROOMS:
+                        UpdateChatrooms package5 = JsonConvert.DeserializeObject<UpdateChatrooms>(ReceivedMessage);
+                        JsonDeserilze<ChatroomNode>(ref package5.data.chatroom_list);
+                        int count = package5.data.chatroom_list.Count;
+                        for(int i = 0; i < count; i++)
+                        {
+                            JsonDeserilze<UserNode>(ref ((ChatroomNode)(package5.data.chatroom_list[i])).ChatroomMembers);
+                        }
+                        ClientHandler.HandleUpdateChatrooms(package5, remotePoint);
+                        ReceivedMessage = "";
+                        break;
+                    case (int)DataPackage.MESSAGE_CODE.UPDATE_USERS:
+                        UpdateUsers package6 = JsonConvert.DeserializeObject<UpdateUsers>(ReceivedMessage);
+                        JsonDeserilze<UserNode>(ref package6.data.user_list);
+                        ClientHandler.HandleUpdateUsers(package6, remotePoint);
+                        ReceivedMessage = "";
+                        break;
 
                 }
             }

@@ -242,7 +242,42 @@ namespace ChatRoomServer
     }
     class UpdateChatrooms : DataPackage
     {
+        public class Data
+        {
+            public int status;
+            public ArrayList chatroom_list;
+            public Data(int status, ArrayList chatroom_list)
+            {
+                this.chatroom_list = chatroom_list;
+                this.status = status;
+            }
+        }
+        public new Data data;
+        public UpdateChatrooms(int status, ArrayList chatroom_list)
+        {
+            this.message_code = (int)DataPackage.MESSAGE_CODE.UPDATE_CHATROOMS;
+            this.data = new Data(status, chatroom_list);
+        }
+    }
 
+    class UpdateUsers : DataPackage
+    {
+        public class Data
+        {
+            public int status;
+            public ArrayList user_list;
+            public Data(int status, ArrayList user_list)
+            {
+                this.user_list = user_list;
+                this.status = status;
+            }
+        }
+        public new Data data;
+        public UpdateUsers(int status, ArrayList user_list)
+        {
+            this.message_code = (int)DataPackage.MESSAGE_CODE.UPDATE_USERS;
+            this.data = new Data(status, user_list);
+        }
     }
 
 

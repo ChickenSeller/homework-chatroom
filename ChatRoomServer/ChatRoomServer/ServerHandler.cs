@@ -17,6 +17,8 @@ namespace ChatRoomServer
             LoginResponse response = new LoginResponse((int)DataPackage.STATUS_CODE.OK, user.UserID, user.UserName);
             Program.server.Log("用户登录:\t" + user.UserIP + ":" + user.UserPort.ToString() + "\tID:" + user.UserID.ToString() + "\tName:" + user.UserName);
             Program.server.SendMsg(response, point);
+            UpdateUsers res = new UpdateUsers(0, Program.server.users.users);
+            Program.server.BroadcastMsg(res, Program.server.users.users);
         }
         public static void HandleGetChatroomList(GetChatroomList package, EndPoint point)
         {
@@ -68,5 +70,7 @@ namespace ChatRoomServer
                 Program.server.BroadcastMsg(msg, tempNode.ChatroomMembers);
             }
         }
+
+        
     }
 }

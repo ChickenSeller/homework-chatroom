@@ -75,5 +75,36 @@ namespace ChatroomClient
             }
             ((FormChatroomNode)(Program.client.formChatrooms[roomID])).form.RefreshChatMessage(package.data.sender_id, package.data.message_content);
         }
+
+        static public void HandleUpdateChatrooms(UpdateChatrooms package,EndPoint point)
+        {
+            if (package.data.status != 0)
+            {
+                return;
+            }
+            Program.client.chatrooms.chatrooms = package.data.chatroom_list;
+            Program.client.formMain.RefreshChatroomList();
+            int count = Program.client.formChatrooms.Count;
+
+            for(int i = 0; i < count; i++)
+            {
+                //int id=;
+                if (Program.client.chatrooms.GetChatRoomByID(((FormChatroomNode)Program.client.formChatrooms[i]).chatroom_id) == null)
+                {
+                    ((FormChatroomNode)Program.client.formChatrooms[i]).form.Close();
+                    Program.client.formChatrooms.RemoveAt(i);
+                }
+                ((FormChatroomNode)Program.client.formChatrooms[i]).form.RefreshChatroomInfo();
+            }
+        }
+        static public void HandleUpdateUsers(UpdateUsers package,EndPoint point)
+        {
+            if (package.data.status != 0)
+            {
+                return;
+            }
+            Program.client.users.users = package.data.user_list;
+            Program.client.myself = Program.client.users.GetUserByID(Program.client.myself.UserID);
+        }
     }
 }

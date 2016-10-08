@@ -72,6 +72,15 @@ namespace ChatroomClient
             ChatroomNode roomNode = (ChatroomNode)Program.client.chatrooms.chatrooms[index];
             Program.client.AddFormChatroom(roomNode);
             int roomID = Program.client.GetFormChatroom(roomNode);
+            if (Program.client.formChatrooms[roomID] == null)
+            {
+                return;
+            }
+            if (((FormChatroomNode)Program.client.formChatrooms[roomID]).is_running)
+            {
+                ((FormChatroomNode)Program.client.formChatrooms[roomID]).form.Show();
+                return;
+            }
             ParameterizedThreadStart ParStart = new ParameterizedThreadStart(Program.client.openFormChatroom);
             Thread myThread = new Thread(ParStart);
             myThread.Start(roomNode);

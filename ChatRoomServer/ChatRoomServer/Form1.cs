@@ -111,6 +111,12 @@ namespace ChatRoomServer
                 return;
             }
             Program.server.chatrooms.AddChatroom(this.ChatroomTextbox.Text);
+            UpdateChatrooms res = new UpdateChatrooms(0,Program.server.chatrooms.chatrooms);
+            Program.server.BroadcastMsg(res, Program.server.users.users);
+        }
+        public void UpdateChatroom()
+        {
+
         }
     }
 }

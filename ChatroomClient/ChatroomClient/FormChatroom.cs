@@ -47,7 +47,7 @@ namespace ChatroomClient
                     break;
                 }
             }
-            this.Text = "聊天室:" + this.chatroomNode.ChatroomName + "    成员:" + this.chatroomNode.ChatroomMembers.Count.ToString();
+            this.Text = Program.client.myself.UserName + "    聊天室:" + this.chatroomNode.ChatroomName + "    成员:" + this.chatroomNode.ChatroomMembers.Count.ToString();
             this.MenberListbox.Items.Clear();
             foreach (UserNode tempNode in this.chatroomNode.ChatroomMembers)
             {
@@ -64,9 +64,7 @@ namespace ChatroomClient
                     this.ChatHistory_TextBox.Text = this.ChatHistory_TextBox.Text + ChatMessageFormat(temp.UserName,message_content);
                 }
             }
-            
         }
-        
 
         private void FormChatroom_Load(object sender, EventArgs e)
         {
