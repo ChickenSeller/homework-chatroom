@@ -47,6 +47,7 @@
             this.ChatHistory_TextBox.ReadOnly = true;
             this.ChatHistory_TextBox.Size = new System.Drawing.Size(429, 326);
             this.ChatHistory_TextBox.TabIndex = 2;
+            this.ChatHistory_TextBox.TextChanged += new System.EventHandler(this.ChatHistory_TextBox_TextChanged);
             // 
             // MenberListbox
             // 
@@ -73,6 +74,7 @@
             this.button1.TabIndex = 3;
             this.button1.Text = "发送";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
             // 

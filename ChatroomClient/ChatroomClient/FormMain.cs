@@ -65,6 +65,10 @@ namespace ChatroomClient
         private void Chatroom_ListBox_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             int index = this.Chatroom_ListBox.SelectedIndex;
+            if (index < 0)
+            {
+                return;
+            }
             ChatroomNode roomNode = (ChatroomNode)Program.client.chatrooms.chatrooms[index];
             Program.client.AddFormChatroom(roomNode);
             int roomID = Program.client.GetFormChatroom(roomNode);

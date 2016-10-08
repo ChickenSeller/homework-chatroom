@@ -61,40 +61,7 @@ namespace ChatroomClient
             }
         }
 
-        public void HandleGetChatroomListResponse(GetChatroomListResponse package,EndPoint point)
-        {
-            if (package.data.status == 0)
-            {
-                this.chatrooms.chatrooms = package.data.chatrooms;
-                this.formMain.RefreshChatroomList();
-            }
-        }
-
-        public void HandleJoinChatroomResponse(JoinChatroomResponse package, EndPoint point)
-        {
-            if (package.data.status != 0)
-            {
-                return;
-            }
-                int index = -1;
-            int num = Program.client.chatrooms.chatrooms.Count;
-            for(int i=0;i<num;i++)
-            {
-                if (((ChatroomNode)(Program.client.chatrooms.chatrooms[i])).ChatroomID == package.data.chatroom_id)
-                {
-                    index = i;
-                    break;
-                }
-            }
-            if (index < 0)
-            {
-                return;
-            }
-            ChatroomNode tempNode = ((ChatroomNode)(Program.client.chatrooms.chatrooms[index]));
-            tempNode.ChatroomMembers = package.data.members;
-            Program.client.chatrooms.chatrooms[index] = tempNode;
-            RefreshChatroomForms();
-        }
+        
         public void openFormMain()
         {
             Application.Run(this.formMain);
@@ -188,15 +155,21 @@ namespace ChatroomClient
                     case (int)DataPackage.MESSAGE_CODE.GET_CHATROOM_LIST_RESPONSE:
                         GetChatroomListResponse package2 = JsonConvert.DeserializeObject<GetChatroomListResponse>(ReceivedMessage);
                         JsonDeserilze<ChatroomNode>(ref package2.data.chatrooms);
-                        HandleGetChatroomListResponse(package2, remotePoint);
+                        ClientHandler.HandleGetChatroomListResponse(package2, remotePoint);
                         ReceivedMessage = "";
                         break;
                     case (int)DataPackage.MESSAGE_CODE.JOIN_CHATROOM_RESPONSE:
                         JoinChatroomResponse package3 = JsonConvert.DeserializeObject<JoinChatroomResponse>(ReceivedMessage);
                         JsonDeserilze<UserNode>(ref package3.data.members);
-                        HandleJoinChatroomResponse(package3, remotePoint);
+                        ClientHandler.HandleJoinChatroomResponse(package3, remotePoint);
                         ReceivedMessage = "";
                         break;
+                    case (int)DataPackage.MESSAGE_CODE.PUSH_MESSAGE:
+                        PushMessage package4 = JsonConvert.DeserializeObject<PushMessage>(ReceivedMessage);
+                        ClientHandler.HandlePushMessage(package4, remotePoint);
+                        ReceivedMessage = "";
+                        break;
+
                 }
             }
             

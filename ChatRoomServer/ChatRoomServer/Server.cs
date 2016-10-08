@@ -44,7 +44,7 @@ namespace ChatRoomServer
             }
             catch(Exception e)
             {
-                return 1;
+                Log(e.Message);
             }
             
             this.WorkerThread = new Thread(new ThreadStart(this.ReceiveMsg));
@@ -112,6 +112,12 @@ namespace ChatRoomServer
                         ServerHandler.HandleJoinChatroom(package3, remotePoint);
                         ReceivedMessage = "";
                         break;
+                    case (int)DataPackage.MESSAGE_CODE.CHAT_MESSAGE:
+                        ChatMessage package4 = JsonConvert.DeserializeObject<ChatMessage>(ReceivedMessage);
+                        ServerHandler.HandleChatMessage(package4, remotePoint);
+                        ReceivedMessage = "";
+                        break;
+
 
                 }
                 remotePoint = null;

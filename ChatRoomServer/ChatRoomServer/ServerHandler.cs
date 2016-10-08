@@ -38,7 +38,7 @@ namespace ChatRoomServer
             Program.server.chatrooms.chatrooms.RemoveAt(index);
             Program.server.chatrooms.chatrooms.Insert(index, chatroom);
             JoinChatroomResponse response = new JoinChatroomResponse((int)DataPackage.STATUS_CODE.OK, chatroom.ChatroomID, chatroom.ChatroomMembers);
-            Program.server.Log("加入聊天室:\tUser ID:" + user.UserIP + ":" + user.UserPort.ToString() + "\tChatroom ID:" + chatroom.ChatroomID.ToString());
+            Program.server.Log("加入聊天室:\t:" + user.UserIP + ":" + user.UserPort.ToString() + "\tChatroom ID:" + chatroom.ChatroomID.ToString());
             Program.server.BroadcastMsg(response, chatroom.ChatroomMembers);
         }
         public static void HandleExitChatroom(ExitChatroom package, EndPoint point)
@@ -60,10 +60,11 @@ namespace ChatRoomServer
             ArrayList targetChatrooms = package.data.receiver_id;
             Program.server.users.UpdateUserIP(package.data.user_id, (IPEndPoint)point);
             PushMessage msg = new PushMessage(0, package.data.user_id, 0, package.data.message_content);
-            foreach(int id in targetChatrooms)
+            foreach(long id in targetChatrooms)
             {
-                ChatroomNode tempNode = Program.server.chatrooms.GetChatRoomByID(id);
+                ChatroomNode tempNode = Program.server.chatrooms.GetChatRoomByID(Convert.ToInt32(id));
                 msg.data.chatroom_id = tempNode.ChatroomID;
+                Program.server.Log("发送消息:\tUser ID:" + package.data.user_id + "\tChatroom ID:" + package.data.receiver_id[0]);
                 Program.server.BroadcastMsg(msg, tempNode.ChatroomMembers);
             }
         }

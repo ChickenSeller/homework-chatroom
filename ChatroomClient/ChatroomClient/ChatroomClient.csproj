@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Chatroom.cs" />
     <Compile Include="Client.cs" />
+    <Compile Include="ClientHandler.cs" />
     <Compile Include="DataPackage.cs" />
     <Compile Include="FormChatroom.cs">
       <SubType>Form</SubType>
