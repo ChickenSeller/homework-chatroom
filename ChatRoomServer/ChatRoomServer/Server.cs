@@ -31,6 +31,17 @@ namespace ChatRoomServer
             this.chatrooms = new Chatroom();
             this.RunningFlag = false;
         }
+        public Server()
+        {
+            
+            this.users = new User();
+            this.chatrooms = new Chatroom();
+            this.RunningFlag = false;
+        }
+        public void BindPort(int port)
+        {
+            this.serverip = new IPEndPoint(IPAddress.Any, port);
+        }
 
         public int StartServer()
         {
@@ -38,6 +49,9 @@ namespace ChatRoomServer
             {
                 return -1;
             }
+            this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            const int SIP_UDP_CONNRESET = -1744830452;
+            this.socket.IOControl(SIP_UDP_CONNRESET, new byte[] { 0, 0, 0, 0 }, null);
             try
             {
                 this.socket.Bind(serverip);
@@ -61,8 +75,10 @@ namespace ChatRoomServer
             {
                 return -1;
             }
+            this.RunningFlag = false;
             this.WorkerThread.Abort();
             this.socket.Close();
+            
             Log("服务已停止");
             return 0;
         }

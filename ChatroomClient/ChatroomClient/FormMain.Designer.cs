@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.Chatroom_ListBox = new System.Windows.Forms.ListBox();
-            this.JoinedChatroom_ListBox = new System.Windows.Forms.ListBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.进入ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,6 +42,7 @@
             this.UserNameLabel = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.UserIDLabel = new System.Windows.Forms.Label();
+            this.User_ListBox = new System.Windows.Forms.ListBox();
             this.contextMenuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -58,16 +58,6 @@
             this.Chatroom_ListBox.Size = new System.Drawing.Size(220, 412);
             this.Chatroom_ListBox.TabIndex = 0;
             this.Chatroom_ListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.Chatroom_ListBox_MouseDoubleClick);
-            // 
-            // JoinedChatroom_ListBox
-            // 
-            this.JoinedChatroom_ListBox.ContextMenuStrip = this.contextMenuStrip1;
-            this.JoinedChatroom_ListBox.FormattingEnabled = true;
-            this.JoinedChatroom_ListBox.ItemHeight = 12;
-            this.JoinedChatroom_ListBox.Location = new System.Drawing.Point(6, 6);
-            this.JoinedChatroom_ListBox.Name = "JoinedChatroom_ListBox";
-            this.JoinedChatroom_ListBox.Size = new System.Drawing.Size(220, 412);
-            this.JoinedChatroom_ListBox.TabIndex = 0;
             // 
             // contextMenuStrip1
             // 
@@ -113,13 +103,13 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.JoinedChatroom_ListBox);
+            this.tabPage2.Controls.Add(this.User_ListBox);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(232, 423);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "已加入聊天室";
+            this.tabPage2.Text = "用户列表";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // label1
@@ -174,6 +164,15 @@
             this.UserIDLabel.Size = new System.Drawing.Size(0, 12);
             this.UserIDLabel.TabIndex = 8;
             // 
+            // User_ListBox
+            // 
+            this.User_ListBox.FormattingEnabled = true;
+            this.User_ListBox.ItemHeight = 12;
+            this.User_ListBox.Location = new System.Drawing.Point(6, 6);
+            this.User_ListBox.Name = "User_ListBox";
+            this.User_ListBox.Size = new System.Drawing.Size(220, 412);
+            this.User_ListBox.TabIndex = 0;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -204,7 +203,6 @@
 
         #endregion
         private System.Windows.Forms.ListBox Chatroom_ListBox;
-        private System.Windows.Forms.ListBox JoinedChatroom_ListBox;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem 进入ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 退出ToolStripMenuItem;
@@ -217,5 +215,6 @@
         private System.Windows.Forms.Label UserNameLabel;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label UserIDLabel;
+        private System.Windows.Forms.ListBox User_ListBox;
     }
 }

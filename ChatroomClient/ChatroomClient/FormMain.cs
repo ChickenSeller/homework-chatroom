@@ -60,6 +60,18 @@ namespace ChatroomClient
                 tempNode = (ChatroomNode)Program.client.chatrooms.chatrooms[i];
                 this.Chatroom_ListBox.Items.Insert(i, tempNode.ChatroomName);
             }
+            
+        }
+        public void RefreshUserList()
+        {
+            int count = Program.client.users.users.Count;
+            UserNode tempNode;
+            this.User_ListBox.Items.Clear();
+            for (int i = 0; i < count; i++)
+            {
+                tempNode = (UserNode)Program.client.users.users[i];
+                this.User_ListBox.Items.Insert(i, tempNode.UserName);
+            }
         }
 
         private void Chatroom_ListBox_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -70,6 +82,7 @@ namespace ChatroomClient
                 return;
             }
             ChatroomNode roomNode = (ChatroomNode)Program.client.chatrooms.chatrooms[index];
+            Program.client.UpdateMyChatrooms(roomNode);
             Program.client.AddFormChatroom(roomNode);
             int roomID = Program.client.GetFormChatroom(roomNode);
             if (Program.client.formChatrooms[roomID] == null)

@@ -32,6 +32,8 @@ namespace ChatroomClient
             this.clientip = new IPEndPoint(IPAddress.Any, port);
             this.serverip = new IPEndPoint(IPAddress.Any, port);
             this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            const int SIP_UDP_CONNRESET = -1744830452;
+            this.socket.IOControl(SIP_UDP_CONNRESET, new byte[] { 0, 0, 0, 0 }, null);
             this.chatrooms = new Chatroom();
             this.my_chatrooms = new Chatroom();
             this.users = new User();
@@ -155,6 +157,11 @@ namespace ChatroomClient
                     case (int)DataPackage.MESSAGE_CODE.GET_CHATROOM_LIST_RESPONSE:
                         GetChatroomListResponse package2 = JsonConvert.DeserializeObject<GetChatroomListResponse>(ReceivedMessage);
                         JsonDeserilze<ChatroomNode>(ref package2.data.chatrooms);
+                        int count1 = package2.data.chatrooms.Count;
+                        for (int i = 0; i < count1; i++)
+                        {
+                            JsonDeserilze<UserNode>(ref ((ChatroomNode)(package2.data.chatrooms[i])).ChatroomMembers);
+                        }
                         ClientHandler.HandleGetChatroomListResponse(package2, remotePoint);
                         ReceivedMessage = "";
                         break;
@@ -172,8 +179,8 @@ namespace ChatroomClient
                     case (int)DataPackage.MESSAGE_CODE.UPDATE_CHATROOMS:
                         UpdateChatrooms package5 = JsonConvert.DeserializeObject<UpdateChatrooms>(ReceivedMessage);
                         JsonDeserilze<ChatroomNode>(ref package5.data.chatroom_list);
-                        int count = package5.data.chatroom_list.Count;
-                        for(int i = 0; i < count; i++)
+                        int count2 = package5.data.chatroom_list.Count;
+                        for(int i = 0; i < count2; i++)
                         {
                             JsonDeserilze<UserNode>(ref ((ChatroomNode)(package5.data.chatroom_list[i])).ChatroomMembers);
                         }
@@ -246,6 +253,20 @@ namespace ChatroomClient
                 }
                 ((FormChatroomNode)(this.formChatrooms[roomID])).form.RefreshChatroomInfo();
             }
+        }
+
+        public void UpdateMyChatrooms(ChatroomNode chatroom)
+        {
+            int count = this.my_chatrooms.chatrooms.Count;
+            for(int i = 0; i < count; i++)
+            {
+                if (((ChatroomNode)this.my_chatrooms.chatrooms[i]).ChatroomID == chatroom.ChatroomID)
+                {
+                    this.my_chatrooms.chatrooms[i] = chatroom;
+                    return;
+                }
+            }
+            this.my_chatrooms.chatrooms.Add(chatroom);
         }
 
     }

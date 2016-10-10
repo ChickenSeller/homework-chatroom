@@ -17,6 +17,7 @@ namespace ChatRoomServer
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             frm = new Form1();
+            Program.server = new Server();
             Application.Run(frm);
         }
         static public Server server;

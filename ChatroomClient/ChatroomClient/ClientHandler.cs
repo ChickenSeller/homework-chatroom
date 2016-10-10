@@ -105,6 +105,7 @@ namespace ChatroomClient
             }
             Program.client.users.users = package.data.user_list;
             Program.client.myself = Program.client.users.GetUserByID(Program.client.myself.UserID);
+            Program.client.formMain.RefreshUserList();
         }
     }
 }

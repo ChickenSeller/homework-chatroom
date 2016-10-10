@@ -49,7 +49,7 @@ namespace ChatRoomServer
                 MessageBox.Show("端口必须在1-16635之间");
                 return;
             }
-            Program.server = new Server(port);
+            Program.server.BindPort(port);
             int flag = Program.server.StartServer();
             if (flag == -1)
             {
@@ -113,10 +113,11 @@ namespace ChatRoomServer
             Program.server.chatrooms.AddChatroom(this.ChatroomTextbox.Text);
             UpdateChatrooms res = new UpdateChatrooms(0,Program.server.chatrooms.chatrooms);
             Program.server.BroadcastMsg(res, Program.server.users.users);
-        }
-        public void UpdateChatroom()
-        {
-
+            this.ChatroomListbox.Items.Clear();
+            foreach(ChatroomNode tempNode in Program.server.chatrooms.chatrooms)
+            {
+                this.ChatroomListbox.Items.Add(tempNode.ChatroomID.ToString() + ":\t" + tempNode.ChatroomName);
+            }
         }
     }
 }

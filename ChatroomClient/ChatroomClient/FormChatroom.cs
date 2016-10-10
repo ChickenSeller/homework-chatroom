@@ -53,6 +53,7 @@ namespace ChatroomClient
             {
                 this.MenberListbox.Items.Add(tempNode.UserName);
             }
+            
         }
 
         public void RefreshChatMessage(int sender_id,string message_content)
